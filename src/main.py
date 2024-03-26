@@ -40,7 +40,8 @@ def valid_command_arguments(command, arguments):
 def main():
     if len(sys.argv) < 4:
         print("Missing arguments.",
-              "Correct usage is: python3 src/main.py <host> <port> <command>",
+              "Correct usage is:",
+              "  python3 src/main.py <host> <port> <command>",
               sep="\n")
         sys.exit()
 
@@ -51,34 +52,49 @@ def main():
               "Available commands are: 'itr', 'itv', 'gtr' and 'gtv'.", sep="\n")
         sys.exit()
 
-    if not valid_command_arguments(command, sys.argv[4:]):
-        print("Wrong number of arguments.",
+    args = sys.argv[4:]
+
+    if not valid_command_arguments(command, args):
+        print("Wrong number of arguments for the selected command.",
               "Correct usage is:",
-              "itr <id> <nonce>",
-              "itv <SAS>",
-              "gtr <N> <SAS-1> <SAS-2> ... <SAS-N>",
-              "gtv <GAS>", sep="\n")
+              "  itr <id> <nonce>",
+              "  itv <SAS>",
+              "  gtr <N> <SAS-1> <SAS-2> ... <SAS-N>",
+              "  gtv <GAS>", sep="\n")
         sys.exit()
 
-    with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
-        s.connect((host, int(port)))
-        match command:
-            case 'itr':
-                message = struct.pack('h12si', 1, bytes(
-                    "2021421869  ", encoding="ascii"), 1)
-                print("Message sent: ", message)
-                s.send(message)
-                response = s.recv(82)
-                print("Response received: ", response)
-            case 'itv':
-                pass
-            case 'gtr':
-                pass
-            case 'gtv':
-                pass
-            case _:
-                print("Unreachable.")
-                sys.exit()
+    # with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as s:
+    #     s.connect((host, int(port)))
+    match command:
+        case 'itr':
+            net_id, nonce = args
+            print(net_id, nonce)
+            message = struct.pack('h12si', 1,
+                                  bytes(
+                                      net_id.ljust(12, " "),
+                                      encoding="ascii"
+                                  ),
+                                  int(nonce))
+            print("Message sent: ", message)
+            # s.send(message)
+            # response = s.recv(82)
+            # print("Response received: ", response)
+        case 'itv':
+            net_id, nonce, token = args[0].split(":")
+            print(net_id, nonce, token)
+        case 'gtr':
+            n = args[0]
+            sas = args[1:]
+            print(n)
+            print(sas)
+        case 'gtv':
+            splitted = args[0].split("+")
+            sas = splitted[:-1]
+            token = splitted[-1]
+            print(sas, token)
+        case _:
+            print("Unreachable.")
+            sys.exit()
 
 
 if __name__ == "__main__":
