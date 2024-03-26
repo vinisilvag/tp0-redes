@@ -1,5 +1,3 @@
-"""Main file."""
-
 import sys
 import socket
 import struct
@@ -34,14 +32,12 @@ def valid_command_arguments(command, arguments):
         case 'gtv':
             return len(arguments) == 1
         case _:
-            print("Unknown number of arguments for a unknown command.",
+            print("Unknown number of arguments for an unknown command.",
                   "Should be unreachable.", sep="\n")
             sys.exit()
 
 
 def main():
-    """Main function."""
-
     if len(sys.argv) < 4:
         print("Missing arguments.",
               "Correct usage is: python3 src/main.py <host> <port> <command>",
