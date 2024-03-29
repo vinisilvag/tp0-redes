@@ -33,6 +33,20 @@ def main():
                 sock.send(message)
                 response = sock.recv(82)
                 print(make_sas(response))
+            case "itv":
+                sas = args[0]
+                net_id, nonce, token = sas.split(":")
+                message = struct.pack(
+                    "!h 12s i 64s",
+                    3,
+                    net_id.ljust(12, " ").encode(),
+                    int(nonce),
+                    token.encode()
+                )
+                sock.send(message)
+                response = sock.recv(83)
+                _, _, _, _, valid = struct.unpack("!h 12s i 64s b", response)
+                print(valid)
 
 
 if __name__ == "__main__":
