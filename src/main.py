@@ -26,9 +26,7 @@ from utils import (
 
 
 def main():
-    """
-    Main function of the project. It is executed when the script is run.
-    """
+    """Main function of the project. It is executed when the script is run."""
 
     if len(sys.argv) < 4:
         raise MissingArguments(3, len(sys.argv) - 1)
@@ -39,7 +37,6 @@ def main():
 
     if command not in COMMANDS:
         raise UnknownCommand(command)
-
     if not valid_arg_count(command, args):
         raise WrongCommandNumberArguments(command)
 

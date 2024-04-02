@@ -23,7 +23,6 @@ def get_address_family(host: str, port: int):
 
     addr_info = socket.getaddrinfo(host, port, 0, socket.SOCK_DGRAM)
     available = [(info[0], info[4]) for info in addr_info]
-
     if len(available) == 0:
         raise InvalidHost(host, port)
 
